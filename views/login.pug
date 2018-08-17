@@ -1,0 +1,26 @@
+extends layout
+block content
+    .row
+        h1
+          span
+          |  Login
+        // show any messages that come back with authentication
+        if message
+            .alert.alert-danger #{message}
+        // LOGIN FORM
+        form(action='/login', method='post')
+          .form-group
+            label Email
+            input.form-control(type='text', name='email')
+          .form-group
+            label Password
+            input.form-control(type='password', name='password')
+          button.btn.btn-warning.btn-lg(type='submit') Login
+        hr
+        p
+          | Need an account? 
+          a(href='/signup') Signup
+        p
+          | Or go 
+          a(href='/') home
+          | .

@@ -4,11 +4,28 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+var flash = require('connect-flash')
+var User = require("./models/user.js");
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+
+// Configuring Passport
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({
+    secret: 'mySecretKey'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
@@ -17,8 +34,8 @@ app.use(bodyParser.urlencoded({
 
 
 //Set up default mongoose connection
-var mongoDB = 'mongodb://127.0.0.1/my_database';
-mongoose.connect(mongoDB);
+var configDb = require('./database.js');
+mongoose.connect(configDb.url);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -32,13 +49,49 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 }));
+
+// set up our express application
+app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-//LOGIN PAGE
+
+//Handle Requests
+app.get('/', function (req, res) {
+    res.json('index');
+});
+app.get('/login', function (req, res) {
+
+    // render the page and pass in any flash data if it exists
+    res.render('login');
+});
+app.get('/signup', function (req, res) {
+    // render the page and pass in any flash data if it exists
+    res.render('signup', {
+        message: req.flash('signupMessage')
+    });
+});
+app.get('/profile', isLoggedIn, function (req, res) {
+    res.render('profile.ejs', {
+        user: req.user
+    });
+});
+app.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
 
 
 

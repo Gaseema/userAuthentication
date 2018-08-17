@@ -1,5 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .row(style="text-align:center;")
+    .loginContainer
+        h5 Node Authentication
+        p Login or Register
+        a.btn.btn-default(href='/login' style="margin-right:20px;")
+          span.fa.fa-user
+          |  Local Login
+        a.btn.btn-default(href='/signup')
+          span.fa.fa-user
+          |  Local Signup
+
+      
+
