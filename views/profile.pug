@@ -1,3 +1,24 @@
 extends layout
 block content
-    h5 Nothing yet
+    .container
+      .page-header.text-center
+        h1
+          span.fa.fa-anchor
+          |  Profile Page
+        a.btn.btn-default.btn-sm(href='/logout') Logout
+      .row
+        // LOCAL INFORMATION
+        .col-sm-6
+          .well
+            h3
+              span.fa.fa-user
+              |  Local
+            p
+              strong id
+              | : #{user._id}
+              br
+              strong email
+              | : #{user.local.email}
+              br
+              strong password
+              | : #{user.local.password}
