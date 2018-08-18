@@ -40,6 +40,8 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+require('./config/passport')(passport); // pass passport for configuration
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -66,7 +68,9 @@ app.get('/', function (req, res) {
 app.get('/login', function (req, res) {
 
     // render the page and pass in any flash data if it exists
-    res.render('login');
+    res.render('login', {
+        message: req.flash('loginMessage')
+    });
 });
 app.get('/signup', function (req, res) {
     // render the page and pass in any flash data if it exists
@@ -75,7 +79,7 @@ app.get('/signup', function (req, res) {
     });
 });
 app.get('/profile', isLoggedIn, function (req, res) {
-    res.render('profile.ejs', {
+    res.render('profile', {
         user: req.user
     });
 });
@@ -100,6 +104,12 @@ app.post('/signup', passport.authenticate('local-signup', {
     failureFlash: true // allow flash messages
 }));
 
+// process the login form
+app.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/profile', // redirect to the secure profile section
+    failureRedirect: '/login', // redirect back to the signup page if there is an error
+    failureFlash: true // allow flash messages
+}));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
