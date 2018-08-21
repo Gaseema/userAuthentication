@@ -90,6 +90,26 @@ app.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
+//Facebook Routes
+app.get('/auth/facebook', passport.authenticate('facebook', {
+    scope: ['public_profile', 'email']
+}));
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {
+        successRedirect: '/profile',
+        failureRedirect: '/'
+    }));
+
+//Google Routes
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
+app.get('/auth/google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/profile',
+        failureRedirect: '/'
+    }));
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on 

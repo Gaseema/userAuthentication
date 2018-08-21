@@ -22,3 +22,44 @@ block content
               br
               strong password
               | : #{user.local.password}
+      .row
+          // FACEBOOK INFORMATION
+          .col-sm-6
+            .well
+              h3.text-primary
+                span.fa.fa-facebook
+                |  Facebook
+              p
+                strong id
+                | : #{user.facebook.id}
+                br
+                strong token
+                | : #{user.facebook.token}
+                br
+                strong email
+                | : #{user.facebook.email}
+                br
+                strong name
+                | : #{user.facebook.name}
+
+      .row
+          // GOOGLE INFORMATION
+          .col-sm-6
+            .well
+              h3.text-primary
+                span.fa.fa-facebook
+                |  Facebook
+              p
+                strong id
+                | : #{user.google.id}
+                br
+                strong token
+                | : #{user.google.token}
+                br
+                strong email
+                | : #{user.google.email}
+                br
+                strong name
+                | : #{user.google.name}
+
+
