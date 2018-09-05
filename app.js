@@ -37,7 +37,9 @@ app.use(bodyParser.urlencoded({
 
 //Set up default mongoose connection
 var configDb = require('./database.js');
-mongoose.connect(configDb.url);
+mongoose.connect(configDb.url, {
+    useNewUrlParser: true
+});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -64,28 +66,28 @@ app.use('/users', usersRouter);
 
 
 //Handle Requests
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     res.json('index');
 });
-app.get('/login', function (req, res) {
+app.get('/login', function(req, res) {
 
     // render the page and pass in any flash data if it exists
     res.render('login', {
         message: req.flash('loginMessage')
     });
 });
-app.get('/signup', function (req, res) {
+app.get('/signup', function(req, res) {
     // render the page and pass in any flash data if it exists
     res.render('signup', {
         message: req.flash('signupMessage')
     });
 });
-app.get('/profile', isLoggedIn, function (req, res) {
+app.get('/profile', isLoggedIn, function(req, res) {
     res.render('profile', {
         user: req.user
     });
 });
-app.get('/logout', function (req, res) {
+app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
@@ -112,7 +114,7 @@ app.get('/auth/google/callback',
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-    // if user is authenticated in the session, carry on 
+    // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next();
     // if they aren't redirect them to the home page
@@ -134,12 +136,12 @@ app.post('/login', passport.authenticate('local-login', {
 }));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
